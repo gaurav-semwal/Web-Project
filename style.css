@@ -418,6 +418,7 @@ footer {
     top: 0;
 }
 
+
 @keyframes floatUp {
     0% {
         transform: translateY(0) scale(1) rotate(-45deg);

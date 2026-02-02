@@ -1,10 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
   const audio = document.getElementById("background-music");
-  const muteButton = document.getElementById("mute-button");
-  const volumeSlider = document.getElementById("volume-slider");
-  const icon = muteButton.querySelector("i");
-  const videoCard = document.querySelector(".aside.left"); // Video card
-  const video = videoCard.querySelector("video"); // Get video element
+  const videoCard = document.querySelector(".aside.left");
+  const video = videoCard.querySelector("video");
   const clickButton = document.querySelector(".click-box button");
   const choiceBox = document.querySelector(".choice-box");
   const threedBox = document.querySelector(".threed-box");
@@ -12,95 +9,93 @@ document.addEventListener("DOMContentLoaded", function () {
   const yesButton = document.querySelector(".choice-box button:first-child");
   const noButton = document.querySelector(".choice-box button:last-child");
 
-  let partnerName = "PIYU"; // Replace with dynamic value
-  let noClickCount = 0; // Counter for No button clicks
+  let partnerName = "Bharti Madam Ji";
+  let noClickCount = 0;
 
-  // Function to create typewriter effect
   function typeWriterEffect(element, text, speed = 100) {
-    element.innerHTML = ""; // Clear previous text
+    element.innerHTML = "";
     let i = 0;
+
     function typing() {
       if (i < text.length) {
         element.innerHTML += text.charAt(i);
         i++;
         setTimeout(typing, speed);
-      } else {
-        element.innerHTML += `<span class="typewriter"></span>`; // Cursor effect
       }
     }
     typing();
   }
 
-  // Function to handle the click event
   function revealChoices() {
-    audio.pause(); // Stop background music
-    audio.currentTime = 0; // Reset music
+    audio.pause();
+    audio.currentTime = 0;
 
-    videoCard.classList.remove("hide"); // Show video card
-    video.play(); // Play the funny video
+    videoCard.classList.remove("hide");
+    video.play();
 
-    clickButton.style.display = "none"; // Hide the button
-    choiceBox.classList.remove("hide"); // Show Yes/No options
+    clickButton.style.display = "none";
+    choiceBox.classList.remove("hide");
 
-    // Show partner name instantly
     questionText.innerHTML = `<span class="partner-name">${partnerName}</span><br><span class="typed-text"></span>`;
 
-    // Start typewriter effect for the second line
     const typedTextElement = document.querySelector(".typed-text");
     setTimeout(() => {
       typeWriterEffect(
         typedTextElement,
-        "Aaj Lunch Karne Chalegi Sath Mai, Tu mai or Sumit Bhai?",
+        "Kya Bharti Madam Ji Aaj Fries Khilayege? 🍟😋",
       );
-    }, 200); // Delay to allow smooth transition
+    }, 200);
   }
 
-  function createHearts() {
-    const heartContainer = document.createElement("div");
-    heartContainer.classList.add("heart-container");
-    document.body.appendChild(heartContainer);
+  // FOOD FALLING EFFECT
+  function createFood() {
+    const foods = ["🍔", "🍕", "🍟", "🍩"];
+    const foodContainer = document.createElement("div");
+    foodContainer.classList.add("food-container");
+    document.body.appendChild(foodContainer);
 
     for (let i = 0; i < 30; i++) {
-      let heart = document.createElement("div");
-      heart.classList.add("heart");
+      let food = document.createElement("div");
+      food.classList.add("food");
+      food.innerText = foods[Math.floor(Math.random() * foods.length)];
 
-      // Random positioning and animation speed
-      heart.style.left = Math.random() * 100 + "vw";
-      heart.style.animationDuration = Math.random() * 2 + 3 + "s";
+      food.style.left = Math.random() * 100 + "vw";
+      food.style.animationDuration = Math.random() * 2 + 3 + "s";
 
-      heartContainer.appendChild(heart);
+      foodContainer.appendChild(food);
     }
 
-    // Remove hearts after animation ends
     setTimeout(() => {
-      heartContainer.remove();
+      foodContainer.remove();
     }, 5000);
   }
 
   yesButton.addEventListener("click", function () {
-    questionText.innerHTML = `<span class="partner-name">${partnerName}</span><br><span class="love-text">Thank You Piyu & Sumit Bhaiya🤗</span>`;
-    choiceBox.style.display = "none"; // Hide choices
+    questionText.innerHTML = `<span class="partner-name">${partnerName}</span><br><span class="love-text">Thank You Fries Ke Liye 😋</span>`;
+    choiceBox.style.display = "none";
     threedBox.classList.remove("hide");
 
-    createHearts();
+    createFood();
   });
 
-  // Handle "No" button click
+  // NO BUTTON ESCAPES ONLY WHEN CLICKED 😈
+  function moveNoButton() {
+    const offsetX = Math.random() * 150 - 75;
+    const offsetY = Math.random() * 100 - 50;
+
+    noButton.style.position = "relative";
+    noButton.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+  }
+
+  noButton.addEventListener("mousedown", moveNoButton);
+  noButton.addEventListener("touchstart", moveNoButton);
+
   noButton.addEventListener("click", function () {
-    noClickCount++; // Increment No click count
+    noClickCount++;
 
-    if (noClickCount < 3) {
-      let newNoSize = 16 - noClickCount * 2; // Reduce No button size
-      let newYesSize = 18 + noClickCount * 3; // Increase Yes button size
-
-      noButton.style.fontSize = `${newNoSize}px`;
-      noButton.style.padding = `${newNoSize / 2}px ${newNoSize}px`;
-
-      yesButton.style.fontSize = `${newYesSize}px`;
-      yesButton.style.padding = `${newYesSize / 2}px ${newYesSize}px`;
-    } else {
-      noButton.style.display = "none"; // Hide No button after 5 clicks
-      questionText.innerHTML += `<br><span class="no-choice-text">Itna Maarunga Agar Mujhe Pata Chala ki Tune No Button Press Kiya..😤</span>`;
+    if (noClickCount >= 3) {
+      noButton.style.display = "none";
+      questionText.innerHTML += `<br><span class="no-choice-text">No option nahi hai 😤</span>`;
     }
   });
 
